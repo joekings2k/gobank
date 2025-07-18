@@ -39,6 +39,13 @@ jobs:
 
     - name: Run migrations
       run: make migrateup
+
+    - name: Install golang-migrate
+      run: |
+        curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.3/migrate.linux-amd64.tar.gz | tar xvz
+        sudo mv migrate /usr/bin/
+        which migrate
+
     
     # Cache Go modules to speed up builds
     - name: Cache Go modules
