@@ -83,7 +83,6 @@ func TestGetAcccount(t *testing.T){
 			checkResponse:func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusBadRequest,recorder.Code)
 			},
-
 		},
 	}
 	for i := range testCases{
