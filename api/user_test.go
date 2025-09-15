@@ -135,7 +135,7 @@ func TestCreateUser(t *testing.T) {
 			store := mockdb.NewMockStore(ctrl)
 			tc.buildStubs(store)
 
-			server := NewServer(store)
+			server := newTestServer(t,store)
 			recorder := httptest.NewRecorder()
 
 			url:= "/users"
@@ -148,6 +148,53 @@ func TestCreateUser(t *testing.T) {
 			tc.checkResponse(t,recorder)
 
 
+		})
+	}
+}
+
+func TestLoginUser(t *testing.T) {
+	user, password := ramdomUser(t)
+	testCases := []struct {
+		name string
+		body gin.H
+		buildStubs func(store *mockdb.MockStore)
+		checkresponse func(t *testing.T, recorder *httptest.ResponseRecorder)
+	}{
+		{
+			name:"OK",
+			body:gin.H{
+				"username":user.Username,
+				"password":password,
+			}, 
+			buildStubs: func(store *mockdb.MockStore) {
+				store.EXPECT().GetUser(gomock.Any(),gomock.Eq(user.Username)).Times(1).Return(user,nil)
+			},
+			checkresponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
+				require.Equal(t,http.StatusOK,recorder.Code)
+			},
+		},
+	 }
+
+	for i := range testCases {
+		tc := testCases[i]
+		t.Run(tc.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+
+			store := mockdb.NewMockStore(ctrl)
+			tc.buildStubs(store)
+
+			server := newTestServer(t,store)
+			recorder := httptest.NewRecorder()
+
+			url := "/users/login"
+			data, err := json.Marshal(tc.body)
+			require.NoError(t,err)
+			request ,err := http.NewRequest(http.MethodPost,url,bytes.NewReader(data))
+			require.NoError(t,err)
+			request.Header.Set("Content-Type", "application/json")
+			server.router.ServeHTTP(recorder,request)
+			tc.checkresponse(t,recorder)
 		})
 	}
 }
