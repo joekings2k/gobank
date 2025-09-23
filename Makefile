@@ -5,7 +5,7 @@ createdb:
 	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:mypassword@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "postgresql://root:ymolC1DDPax0Ib0HQsg0@gobank.cupka82w00n6.us-east-1.rds.amazonaws.com:5432/gobank" -verbose up
 
 migrateup1:
 	migrate -path db/migration -database "postgresql://root:mypassword@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
