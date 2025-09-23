@@ -1,20 +1,23 @@
+-include app.env
+export $(shell sed 's/=.*//' .env)
+
 postgres:
-	docker run --name postgres12 --network bank-network -e POSTGRES_USER=root -e POSTGRES_PASSWORD=mypassword -p 5432:5432 -d postgres:12-alpine
+	docker run --name postgres12 --network bank-network -e POSTGRES_USER=$(DB_USER) -e POSTGRES_PASSWORD=$(DB_PASSWORD) -p 5432:5432 -d postgres:12-alpine
 
 createdb:
-	docker exec -it postgres12 createdb --username=root --owner=root simple_bank
+	docker exec -it postgres12 createdb --username=$(DB_USER) --owner=root simple_bank
 
 migrateup:
-	migrate -path db/migration -database "postgresql://root:mypassword@localhost:5432/simple_bank?sslmode=disable" -verbose up
+	migrate -path db/migration -database "$(DB_SOURCE)" -verbose up
 
 migrateup1:
-	migrate -path db/migration -database "postgresql://root:mypassword@localhost:5432/simple_bank?sslmode=disable" -verbose up 1
+	migrate -path db/migration -database "$(DB_LOCAL)" -verbose up 1
 
 migratedown:
-	migrate -path db/migration -database "postgresql://root:mypassword@localhost:5432/simple_bank?sslmode=disable" -verbose down
+	migrate -path db/migration -database "$(DB_LOCAL)" -verbose down
 
 migratedown1:
-	migrate -path db/migration -database "postgresql://root:mypassword@localhost:5432/simple_bank?sslmode=disable" -verbose down 1
+	migrate -path db/migration -database "$(DB_LOCAL)" -verbose down 1
 
 dropdb:
 	docker exec -it postgres12 dropdb simple_bank
@@ -26,7 +29,7 @@ test:
 	go test -v -cover ./...
 
 server:
-	go run main.go
+	go run $(MAIN_GO)
 
 mock:
 	mockgen -package=mockdb -destination=db/mock/store.go --build_flags=--mod=mod github.com/joekings2k/gobank/db/sqlc Store
