@@ -39,7 +39,7 @@ jobs:
           REPOSITORY: gobank
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:$IMAGE_TAG:latest .
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest .
           docker push -a  $REGISTRY/$REPOSITORY
       - name: Update Kube config
         run: aws eks update-kubeconfig --region us-east-1 --name gobank
