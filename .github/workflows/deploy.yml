@@ -41,8 +41,12 @@ jobs:
         run: |
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -t $REGISTRY/$REPOSITORY:latest .
           docker push -a  $REGISTRY/$REPOSITORY
+
       - name: Update Kube config
         run: aws eks update-kubeconfig --region us-east-1 --name gobank
+      
+      - name: Verify cluster identity
+        run: kubectl cluster-info
       
       - name: Deploy image to amazon EKS
         run: |
