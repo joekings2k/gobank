@@ -69,6 +69,7 @@ func TestCreateUser(t *testing.T) {
 					Username:user.Username,
 					FullName: user.FullName,
 					Email: user.Email,
+					
 				}
 				store.EXPECT().CreateUser(gomock.Any(), EqCreateUserParams(arg,password)).Times(1).Return(user, nil)
 			},
