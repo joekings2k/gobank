@@ -35,3 +35,7 @@ mock:
 	mockgen -package=mockdb -destination=db/mock/store.go --build_flags=--mod=mod github.com/joekings2k/gobank/db/sqlc Store
 
 .PHONY:postgres  createdb migrateup migratedown migrateup1 migratedown1 dropdb sqlc test server mock
+
+
+
+# a69e9134296d24094b9dba6bc466c90f-716640240.us-east-1.elb.amazonaws.com
