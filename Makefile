@@ -49,6 +49,3 @@ evans:
 
 .PHONY:postgres  createdb migrateup migratedown migrateup1 migratedown1 dropdb sqlc test server mock proto evans
 
-
-
-# a69e9134296d24094b9dba6bc466c90f-716640240.us-east-1.elb.amazonaws.com
