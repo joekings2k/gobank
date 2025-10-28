@@ -34,7 +34,20 @@ server:
 mock:
 	mockgen -package=mockdb -destination=db/mock/store.go --build_flags=--mod=mod github.com/joekings2k/gobank/db/sqlc Store
 
-.PHONY:postgres  createdb migrateup migratedown migrateup1 migratedown1 dropdb sqlc test server mock
+proto:
+	rm -f pb/*.go
+	rm -f doc/swagger/*.swagger.json
+	protoc --proto_path=proto \
+		--go_out=pb --go_opt=paths=source_relative \
+		--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+		--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
+		--openapiv2_out=doc/swagger --openapiv2_opt=allow_merge=true,merge_file_name=gobank  \
+		proto/*.proto
+
+evans:
+	z
+
+.PHONY:postgres  createdb migrateup migratedown migrateup1 migratedown1 dropdb sqlc test server mock proto evans
 
 
 
